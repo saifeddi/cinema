@@ -1,0 +1,16 @@
+.clickable:hover{
+    cursor: pointer;
+    background-color: #ddd;
+}
+.margin{
+    margin-top:8px;
+    margin-bottom:8px;
+
+}
+.marginTop{
+    margin-top:8px;
+ 
+}
+.btn-white{
+    background-color:#ddd
+}

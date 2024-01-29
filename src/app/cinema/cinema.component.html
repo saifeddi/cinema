@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <ul *ngIf="villes" class="list-group">
+                <li *ngFor=" let ville of villes._embedded.villes" [ngClass]=" ville == currentVille ? 'active' : '' "
+                    class="list-group-item clickable" (click)="onGetCinema(ville)">
+                    {{ville.name}}
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">List Cinemas</div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills" *ngIf="cinemas">
+                        <li class="nav-item clickable" *ngFor="let cinema of cinemas._embedded.cinemas"
+                            [ngClass]=" cinema == currentCinema ? 'active' : '' ">
+                            <a (click)="onGetSalle(cinema)">{{cinema.name}}</a>
+                        </li>
+
+
+                    </ul>
+                    <div class="row" *ngIf="salles">
+                        <div class="col-md-6" *ngFor="let salle of salles._embedded.salles">
+                            <div class="panel panel-default" *ngIf="salle.projections">
+                                <div class="panel-heading">{{salle.name}} :
+                                    {{salle.projections._embedded.projections[0].film.titre}}</div>
+                                <div class="row panel-body">
+                                    <div class="col-md-4">
+                                        <img width="100"
+                                            src="http://localhost:8080/images/{{salle.projections._embedded.projections[0].film.id}}"
+                                            alt="">
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <ul class="list-group">
+                                            <li class="list-group-item clickable"
+                                                *ngFor="let projection of salle.projections._embedded.projections"
+                                                (click)="onGetPlace(projection)"
+                                                [ngClass]=" projection == currentProjection ? 'active' : '' ">
+                                                {{projection.seance.heureDebut }} | Prix : {{projection.prix}} DT
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div *ngIf="currentProjection && salle.id == currentProjection.salle.id">
+                                    <div class="row" *ngIf="currentProjection.tickets">
+                                        <div class="col-md-3 marginTop"
+                                            *ngFor="let ticket of currentProjection.tickets">
+                                            <button [disabled]="ticket.reserve" 
+                                            [ngClass]="[!ticket.reserve ? 'btn btn-success' : 'btn btn-white'  , selectedTickets.includes(ticket.id)? 'btn btn-warning':''] "
+                                            (click)="onSelectTicket(ticket)">
+                                                {{ticket?.place?.numero }}
+                                            </button>
+                                        </div>
+                                        
+
+                                    </div>
+                                        <div class="row margin"
+                                        *ngIf="displayForm || this.selectedTickets > 0 "
+                                        >
+                                        <form  #payForm="ngForm"  (ngSubmit)="onclickpayTicket()">
+                                             <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text"
+                                                 placeholder="name of client " name="clientName" [(ngModel)]="data.nameClient">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="number" class="form-control"
+                                               
+                                             placeholder="cart number" name="cartNumber" [(ngModel)]="data.codePayment">
+                                                </div>
+                                            
+                                            <button [disabled]="data.codePayment == null || data.nameClient == null " class="btn btn-success btn-lg" type="submit">pay</button>
+                                            </div>
+                                        </form>
+                                           
+                                            
+                                        </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
